@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  forgejo-runner:
+    image: code.forgejo.org/forgejo/runner:6.3.1
+    restart: unless-stopped
+    privileged: true
+    user: "0:0"
+    network_mode: "host"
+    environment:
+      DOCKER_HOST: unix:///var/run/docker.sock
+      INITIAL_RUNNER_TOKEN: ${INITIAL_RUNNER_TOKEN}
+    volumes:
+      - /run/podman/podman.sock:/var/run/docker.sock
+      - runner-data:/data
+    security_opt:
+      - seccomp=unconfined
+      - apparmor=unconfined
+      - label=disable
+    cap_add:
+      - SYS_PTRACE
+      - NET_ADMIN
+      - SYS_ADMIN
+      - SYS_RESOURCE
+    ipc: "host"
+    command: >-
+      sh -c '
+      apk add --no-cache nodejs npm docker-cli docker-cli-compose &&
+      if [ ! -f /data/.runner ]; then
+        forgejo-runner register --no-interactive --token $INITIAL_RUNNER_TOKEN --instance https://git.hamburg.ccc.de --name mahn.ke --labels windows-2022;
+      fi &&
+      forgejo-runner daemon'
+
+volumes:
+  runner-data:
