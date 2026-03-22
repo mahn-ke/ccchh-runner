@@ -11,7 +11,7 @@ services:
       DOCKER_HOST: unix:///var/run/docker.sock
       INITIAL_RUNNER_TOKEN: ${INITIAL_RUNNER_TOKEN}
     volumes:
-      - /run/podman/podman.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
       - runner-data:/data
     security_opt:
       - seccomp=unconfined
