@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   forgejo-runner:
-    image: code.forgejo.org/forgejo/runner:12.8.1
+    image: code.forgejo.org/forgejo/runner:12.8.2
     restart: unless-stopped
     privileged: true
     user: "0:0"
